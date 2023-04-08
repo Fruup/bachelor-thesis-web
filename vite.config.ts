@@ -8,7 +8,4 @@ export default defineConfig({
       ignored: /\/~tmp/,
     },
   },
-  build: {
-    outDir: 'docs',
-  },
 })
