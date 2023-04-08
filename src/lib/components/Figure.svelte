@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths'
   import { joinPaths } from '$lib/utils'
 
   export let sources: string
@@ -11,7 +12,7 @@
     .split(',')
     .map((source) => source.trim())
     .filter((source) => !!source)
-    .map((source) => '/' + joinPaths(sourcesPath, source))
+    .map((source) => '/' + joinPaths(base, sourcesPath, source))
 
   $: columns = Math.ceil(Math.sqrt(_sources.length))
   $: rows = Math.ceil(_sources.length / columns)
