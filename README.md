@@ -1,38 +1,24 @@
-# create-svelte
+# README
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This is a web version of my bachelor thesis _"Implementation of a method of surface reconstruction and visualization of particle-based fluids"_. It is based on the work of [Wu et al.](https://doi.org/10.2312/sr.20221157) in which they showed their implementation of a ray-marching algorithm capable of rendering an implicit fluid surface from a set of particle positions (in real-time).
 
-## Creating a project
+The code of my own implementation can be found in [this repository](https://github.com/Fruup/bachelor-thesis).
 
-If you're seeing this, you've probably already done this step. Congrats!
+------
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+I originally wrote the document in LaTeX, but being drawn to the simplicity of MarkDown, I attempted to create my own static site generator with some nice features:
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+- Nicely formatted figures with captions,
+- keeping track of where you left off when clicking links and the ability to restore scroll positions,
+- link previews on hover (like Wikipedia),
 
-## Developing
+...and the option to easily add new features in the form of Svelte components.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Technologies
 
-```bash
-npm run dev
+- Svelte, SvelteKit and Vite
+- MarkDown
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+I learned a lot about the technologies I used during the development of this website:
 
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- Vite should have a way to import modules as strings rather than only allowing file imports. I had to generate a temporary file that can be imported dynamically. Be careful with parallelism! I generated a random file name to resolve collisions. Also, I had to differentiate between production and development builds and change the import paths accordingly.
