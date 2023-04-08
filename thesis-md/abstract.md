@@ -1,3 +1,0 @@
-# Abstract
-
-Particle-based fluid simulation is one of the most prominent forms of computational hydrodynamics. The fluid volume is discretized into a finite number of particles. Extracting a surface from this set of particles is a crucial part of visualizing the computed fluid data. Reconstructing distinct features as well as uniform areas while concealing the spherical nature of the data has proven to be complicated. In this thesis, we discuss techniques researchers have developed that try to accomplish this. Our sources propose algorithms that smooth the way to high-quality fluid visualization in real-time, allowing the usage in interactive applications like video games or simulations.
