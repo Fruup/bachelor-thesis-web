@@ -1,0 +1,62 @@
+% !TEX root = ../my-thesis.tex
+%
+\chapter{Introduction}
+\label{sec:intro}
+
+The primary source of this thesis is the paper \textit{A Real-Time Adaptive Ray Marching Method for Particle-Based Fluid Surface Reconstruction}, written by Tong Wu, Zhiqiang Zhou, Anlan Wang, Yuning Gong and Yanci Zhang. In addition to reformulating its contents, we introduce details about our implementation to further build an understanding of the authors' work and to supply anchor points for anyone attempting to develop an implementation for their own.
+
+Williams \cite{Williams:2008} states that computational fluid dynamics consists of three phases: simulation, extraction of a renderable representation, and rendering itself. This work focuses on the latter two. The authors of our primary source build on top of existing advancements in the field and propose algorithms and data structures that aim to make those methods capable of running in real-time.
+
+Whenever we write "the authors" or "Wu et al." we are referring to ideas coming from our primary source. We distinguish between our and others' thoughts by mentioning their origin. Unfortunately, we did not have the time to implement every aspect of the authors' algorithm. Details on the parts we implemented can be found in the \textbf{Implementation} subsections of each chapter.
+
+\section{Structure}
+
+We will start by establishing some notation and explain the reasoning behind our choices regarding implementation details like programming language and libraries. Then we will introduce the theoretical backbone behind particle fluid simulation in \textbf{Smoothed Particle Hydrodynamics \myref{sec:sph}}. Since there are many parts to the described algorithm that have to be addressed, we will give a broad overview in the section \textbf{Pipeline overview \myref{sec:pipelineoverview}} before going into more depth explaining all steps necessary for displaying a fluid on screen. Finally, we will present our results by showing screenshots of our application together with some measurements that qualify the different techniques applied.
+
+\section{Technology}
+
+We decided to use C++ together with \textit{Vulkan} as our graphics API. \textit{Vulkan} is a state-of-the-art graphics API allowing for very low-level access to GPU processes and resources. Although this is not strictly necessary for the application discussed here, learning about \textit{Vulkan} is as interesting as it is useful for moving deeper into graphics programming, which is why we chose to use it. \textit{Vulkan} opens the door to vast improvements in computation time by letting the user decide which computations should run in parallel, what memory is accessible where, and much more. By leveraging more of \textit{Vulkan}'s features, the computation time needed by our implementation could reduce by orders of magnitude. These possibilities are discussed further in the chapter \textbf{Future work \myref{sec:futurework}}.
+
+Other libraries that were used are listed here, some of which are described in more detail later:
+\begin{enumerate}
+    \item \textit{Dear ImGui} for the graphical user interface \cite{ImGui}
+    \item \textit{GLFW} for window management
+    \item \textit{Partio} for importing particle data \cite{Partio}
+    \item \textit{Eigen} and \textit{glm} for math \cite{Eigen}
+    \item \textit{CompactNSearch} for neighborhood search \cite{CompactNSearch}
+    \item \textit{SPlisHSPlasH} for dataset generation \cite{SplishSplash}
+\end{enumerate}
+
+The code for our implementation can be found on GitLab (\url{https://gitlab.rlp.net/leschere/bachelor-thesis}).
+
+\section{Terminology}
+
+This is a collection of mathematical notation and symbols we use throughout this thesis.
+
+\textbf{Notation}:
+
+\begin{itemize}
+    \item Vectors and matrices are written in bold font. The names of vectors are in lower case and those of matrices are in upper case:
+        \begin{itemize}
+            \item $\textbf{r} = (x, y, z)^T \in \mathbb{R}^3$
+            \item $\textbf{C} \in \mathbb{R}^{n \times m}$
+        \end{itemize}
+        
+    \item $| \textbf{r} | := \sqrt{ \sum_{i=1}^n r_i^2 }$ is the $L^2$-norm of the vector $\textbf{r} = ( r_1, \dots, r_n )^T$.
+    \item $|| \textbf{r} || := \frac{1}{|\textbf{r}|} \textbf{r}$ is the unit vector pointing in the same direction as $\textbf{r}$.
+    \item $\tilde{\textbf{r}} \in \mathbb{R}^4$ is a four-dimensional homogenous vector corresponding to a three-dimensional position vector $\textbf{r}$. In computer graphics, homogenous coordinates are used to calculate the projection of three-dimensional objects to the two-dimensional screen.
+    \item $[\textbf{r}]_i$ is the $i$-th entry of the vector $\textbf{r}$. This is to distinguish between element indices and other types of indices the vector inside the brackets could have.
+    \item $[\textbf{C}]_{ij}$ is the entry in the $i$-th row and the $j$-th column of the matrix $\textbf{C}$.
+    \item $\overline{\textbf{C}}$ is the adjugate of the matrix $\textbf{C}$
+    \item $\textbf{r}^2 := \textbf{r}^T \textbf{r} = |\textbf{r}|^2$
+    \item $\text{diag}(a_1, a_2, a_3) := \begin{pmatrix} a_1&0&0\\0&a_2&0\\0&0&a_3 \end{pmatrix}$
+\end{itemize}
+
+\textbf{Symbols}:
+
+\begin{itemize}
+    \item $h$: the particles' radius
+    \item $R_{N}$: neighborhood radius
+    \item $\textbf{G}_i$: characteristic neighborhood matrix of the particle $i$
+    \item $\sigma$: the density threshold at which the fluid's surface is assumed
+\end{itemize}
