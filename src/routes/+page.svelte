@@ -1,7 +1,8 @@
 <script lang="ts">
+  import Modal from '$lib/components/Modal.svelte'
   import Preview from '$lib/components/Preview.svelte'
   import { navigationHistory, useNavigationHistory } from '$lib/services/history'
-  import { usePreview } from '$lib/services/preview.js'
+  import { usePreview } from '$lib/services/preview'
 
   let container: HTMLDivElement
 
@@ -14,7 +15,8 @@
 </script>
 
 <svelte:head>
-  {@html `<style>${css}</style>`}
+  <!-- https://github.com/sveltejs/svelte/issues/5292 -->
+  {@html `<${''}style>${css}</${''}style>`}
 </svelte:head>
 
 <div class="container" bind:this={container} use:useNavigationHistory use:usePreview>
@@ -40,7 +42,13 @@
   </ul>
 </nav>
 
-<style>
+<Modal>
+  <h1>Login</h1>
+
+  <p>Hello my name is Leon</p>
+</Modal>
+
+<style lang="scss">
   nav {
     position: fixed;
     bottom: 0;
@@ -50,5 +58,11 @@
   .container {
     /* max-width: 500px; */
     margin: auto;
+  }
+
+  .container {
+    :global {
+      @import './page.scss';
+    }
   }
 </style>

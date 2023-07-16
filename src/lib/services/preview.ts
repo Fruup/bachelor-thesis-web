@@ -44,7 +44,11 @@ export const usePreview: Action = (node) => {
 
   const listeners = Array.from(anchors.values()).map((a) => {
     const listener = () => {
-      const targetElement = node.querySelector<HTMLElement>(a.getAttribute('href') ?? '_')
+      try {
+        var targetElement = node.querySelector<HTMLElement>(a.getAttribute('href') ?? '_')
+      } catch (e) {
+        return
+      }
 
       if (targetElement) {
         previewElement.set(targetElement)

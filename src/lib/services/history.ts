@@ -10,7 +10,12 @@ interface HistoryEntry {
 const createAnchorEventListener = (a: HTMLAnchorElement) => (e: MouseEvent) => {
   e.preventDefault()
 
-  const toElement = document.querySelector(a.hash)
+  let toElement: HTMLElement | null = null
+
+  try {
+    toElement = document.querySelector(a.hash)
+  } catch (e) {}
+
   if (!toElement) return
 
   // Cancel default navigation and scroll smoothly instead

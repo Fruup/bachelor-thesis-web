@@ -57,6 +57,8 @@
       width: 100%;
 
       img {
+        border-radius: 8px;
+
         margin: auto;
       }
     }
