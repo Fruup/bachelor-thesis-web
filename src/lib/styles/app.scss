@@ -6,6 +6,7 @@
   --color-text: #1f1f1f;
 
   --color-background: #1f1f1f;
+  --color-background-700: #090909;
   --color-text: #eee;
 
   --color-primary: #c10926;
@@ -20,7 +21,10 @@
   background-color: var(--color-background);
 }
 
+:root,
 body {
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
 }
 
@@ -33,74 +37,4 @@ a {
   &:hover {
     color: var(--color-primary);
   }
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  position: relative;
-  line-height: 1.5;
-
-  @include lg {
-    &::before {
-      content: '';
-      position: absolute;
-      background: linear-gradient(to left, var(--color-primary), transparent);
-      translate: -120% -50%;
-      left: 0;
-
-      top: 50%;
-      height: 50%;
-
-      border-radius: 12px;
-    }
-
-    &:hover .icon.icon-link::after {
-      position: absolute;
-      content: '#';
-      translate: -100%;
-      padding-right: 0.1em;
-    }
-  }
-}
-
-$heading-marker-length: 100px;
-
-h1::before {
-  width: $heading-marker-length;
-}
-h2::before {
-  width: #{0.9 * $heading-marker-length};
-}
-h3::before {
-  width: #{0.8 * $heading-marker-length};
-}
-h4::before {
-  width: #{0.7 * $heading-marker-length};
-}
-h5::before {
-  width: #{0.6 * $heading-marker-length};
-}
-h6::before {
-  width: #{0.5 * $heading-marker-length};
-}
-
-.math-display,
-pre {
-  overflow-x: auto;
-}
-
-@include sm {
-  .math-display {
-    margin: 0.5em;
-    font-size: 0.8em;
-  }
-}
-
-code {
-  font-size: 1rem;
-  border-radius: 12px;
 }

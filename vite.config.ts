@@ -8,4 +8,8 @@ export default defineConfig({
       ignored: /\/~tmp/,
     },
   },
+  test: {
+    environment: 'node',
+    include: ['./tests/**/*.{test,spec}.ts'],
+  },
 })

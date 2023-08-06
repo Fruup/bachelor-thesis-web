@@ -1,0 +1,87 @@
+@import 'heading-counter';
+
+@mixin document {
+  hyphens: auto;
+
+  // --------------
+  // - PARAGRAPHS -
+  // --------------
+
+  p {
+    text-align: justify;
+  }
+
+  // ------------
+  // - HEADINGS -
+  // ------------
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    position: relative;
+
+    // margin-top: 3em;
+    margin-bottom: 1.5em;
+
+    border-bottom: 1.5px solid var(--color-primary);
+  }
+
+  h1 {
+    font-size: 2.5em;
+    border-width: 3px;
+  }
+
+  h2 {
+    font-size: 2em;
+    border-width: 2px;
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    border-width: 1px;
+  }
+
+  // Heading counters
+  @include heading-counters;
+
+  // ------------
+  // - SECTIONS -
+  // ------------
+
+  section {
+    margin: 5rem auto;
+  }
+
+  // --------
+  // - MATH -
+  // --------
+
+  .math.math-display {
+    overflow-x: auto;
+  }
+
+  .math.math-inline {
+    text-wrap: nowrap;
+  }
+
+  // ----------
+  // - IMAGES -
+  // ----------
+
+  figure img {
+    border-radius: 4px;
+  }
+
+  // --------
+  // - CODE -
+  // --------
+
+  code {
+    tab-size: 4ch;
+  }
+}

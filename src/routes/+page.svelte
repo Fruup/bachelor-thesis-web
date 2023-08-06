@@ -1,9 +1,15 @@
 <script lang="ts">
+  import ImageDetail from '$lib/components/ImageDetail.svelte'
+  import MathOptions from '$lib/components/MathOptions.svelte'
   import Preview from '$lib/components/Preview.svelte'
   import { navigationHistory, useNavigationHistory } from '$lib/services/history'
-  import { usePreview } from '$lib/services/preview.js'
+  import { usePreview } from '$lib/services/preview'
+  import { onMount } from 'svelte'
 
   let container: HTMLDivElement
+  let imageDetailsContainer: HTMLDivElement
+
+  let imageElements: HTMLImageElement[] = []
 
   const restore = (index: number) => {
     container.dispatchEvent(new CustomEvent('history:restore', { detail: index }))
@@ -11,13 +17,34 @@
 
   export let data
   const { html, css, headings } = data
+
+  onMount(() => {
+    const mathContainers = container.querySelectorAll<HTMLDivElement>('.math.math-display')
+
+    for (const mathContainer of mathContainers) {
+      if (mathContainer.scrollWidth <= mathContainer.clientWidth) continue
+
+      new MathOptions({
+        target: mathContainer,
+        props: {
+          mathContainer,
+        },
+      })
+    }
+
+    imageElements = Array.from(container.querySelectorAll('img'))
+  })
 </script>
 
-<svelte:head>
-  {@html `<style>${css}</style>`}
-</svelte:head>
+<div bind:this={imageDetailsContainer} class="image-details">
+  {#each imageElements as element}
+    <ImageDetail {element} />
+  {/each}
+</div>
 
 <div class="container" bind:this={container} use:useNavigationHistory use:usePreview>
+  {@html `<${'style'} scoped>${css}</style>`}
+
   {@html html}
 </div>
 
@@ -40,7 +67,10 @@
   </ul>
 </nav>
 
-<style>
+<style lang="scss">
+  @import 'vars';
+  @import 'document';
+
   nav {
     position: fixed;
     bottom: 0;
@@ -48,7 +78,10 @@
   }
 
   .container {
-    /* max-width: 500px; */
     margin: auto;
+
+    :global {
+      @include document;
+    }
   }
 </style>

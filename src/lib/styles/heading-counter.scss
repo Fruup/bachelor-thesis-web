@@ -1,0 +1,32 @@
+@mixin heading-counter($depth) {
+  h#{$depth} {
+    // Counter resets
+    $resets: ();
+    @for $i from $depth + 1 through 6 {
+      $h: h#{$i};
+      $resets: join($resets, $h);
+    }
+
+    // Counter content
+    $content: ();
+    @for $i from 1 through $depth {
+      $h: h#{$i};
+      $content: join($content, #{counter($h)} '.');
+    }
+    $content: join($content, ' ');
+
+    counter-increment: h#{$depth};
+    counter-reset: $resets;
+
+    &::before {
+      position: relative;
+      content: $content;
+    }
+  }
+}
+
+@mixin heading-counters {
+  @for $i from 1 through 6 {
+    @include heading-counter($i);
+  }
+}

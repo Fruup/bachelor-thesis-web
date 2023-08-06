@@ -5,12 +5,11 @@ import * as fs from 'node:fs'
 // import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { RootContentMap } from 'hast'
-import type { VFile } from 'vfile'
 import type { Root as MdastRoot } from 'mdast'
-import type { Root as HastRoot } from 'hast'
+import type { RootContentMap, Root as HastRoot } from 'hast'
 import type { Processor } from 'unified'
 import type { SvelteSSRComponent } from './helper'
+import type { Raw } from 'mdast-util-to-hast'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -70,28 +69,30 @@ const processNestedText = (source: string): HastRoot => {
  * - collects CSS in `file.data.css` along the way.
  */
 export const rehypeSvelte: Plugin<[], HastRoot> = function () {
-  return async (tree: HastRoot, file: VFile) => {
+  return async (tree, file) => {
     // Collect nodes to transform
     const nodes: RootContentMap['raw'][] = []
 
-    visit(tree, (node) => {
-      if (node.type !== 'raw') return
+    visit(
+      tree,
+      (node): node is Raw => node.type === 'raw',
+      (node) => {
+        const components = parseComponents(node.value)
 
-      const components = parseComponents(node.value)
+        // Skip if there are no components to be rendered.
+        if (!components.length) return
 
-      // Skip if there are no components to be rendered.
-      if (!components.length) return
+        // Add components information to the node
+        node.data = {
+          ...node.data,
+          components,
+        }
 
-      // Add components information to the node
-      node.data = {
-        ...node.data,
-        components,
-      }
+        nodes.push(node)
 
-      nodes.push(node)
-
-      return SKIP
-    })
+        return SKIP
+      },
+    )
 
     // Transform nodes asynchronously
     const promises = nodes.map((node) => async () => {
@@ -183,11 +184,9 @@ export const rehypeSvelte: Plugin<[], HastRoot> = function () {
  * - and replaces the `text` node with the generated `hast` tree.
  */
 export const rehypeMath: Plugin<[], HastRoot> = function () {
-  return (tree: HastRoot, file: VFile) => {
+  return (tree, file) => {
     visit(tree, (node, index, parent) => {
-      console.log(node)
-
-      if (node.type !== 'text' || !parent || index === null) return
+      if (node.type !== 'text' || !parent || typeof index !== 'number') return
 
       // console.log(node);
       // return SKIP

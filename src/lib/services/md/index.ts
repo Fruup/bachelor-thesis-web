@@ -13,16 +13,21 @@ import { rehypeSvelte } from './plugin'
 import type { Root as MdastRoot } from 'mdast'
 import type { VFile } from 'vfile'
 import { visit } from 'unist-util-visit'
-import type { Node } from 'mdast-util-toc/lib'
+import { toString } from 'mdast-util-to-string'
+import { rehypeSections } from '$lib/plugins/rehypeSections'
+
+declare module 'vfile' {
+  interface DataMap {
+    headings: { depth: number; title: string }[]
+  }
+}
 
 const remarkToc = () => {
   return (tree: MdastRoot, file: VFile) => {
-    visit(tree, (node: Node) => {
-      if (node.type !== 'heading') return
-
+    visit(tree, 'heading', (node) => {
       file.data.headings = [
         ...(file.data.headings ?? []),
-        { depth: node.depth, title: node.children[0].value },
+        { depth: node.depth, title: toString(node) },
       ]
     })
   }
@@ -39,6 +44,7 @@ const processor = unified()
   .use(rehypeSvelte)
   .use(rehypeRaw)
   .use(rehypeSlug)
+  // .use(rehypeSections)
   .use(rehypeAutolink)
   .use(rehypeKatex)
   .use(rehypeHighlight)
@@ -57,6 +63,6 @@ export const process = async (source: string): Promise<ProcessResult> => {
   return {
     html: String(html),
     css: (result.data.css as string) ?? '',
-    headings: result.data.headings,
+    headings: result.data.headings as any,
   }
 }
