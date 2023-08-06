@@ -9,12 +9,13 @@ import rehypeAutolink from 'rehype-autolink-headings'
 import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
-import { rehypeSvelte } from './plugin'
+import { rehypeSvelte } from './rehypeSvelte'
+// import { rehypeSections } from './rehypeSections'
 import type { Root as MdastRoot } from 'mdast'
-import type { VFile } from 'vfile'
+import { VFile } from 'vfile'
 import { visit } from 'unist-util-visit'
 import { toString } from 'mdast-util-to-string'
-import { rehypeSections } from '$lib/plugins/rehypeSections'
+import { generateBibliography, type Bibliography } from '../bibliography'
 
 declare module 'vfile' {
   interface DataMap {
@@ -50,19 +51,37 @@ const processor = unified()
   .use(rehypeHighlight)
   .use(rehypeStringify, { allowDangerousHtml: true })
 
-interface ProcessResult {
-  html: string
-  css: string
-  headings: { depth: number; title: string }[]
+interface Heading {
+  depth: number
+  title: string
 }
 
-export const process = async (source: string): Promise<ProcessResult> => {
-  const result = await processor.process(source)
+interface ProcessInput {
+  source: string
+  bibliography: string
+}
+
+interface ProcessOutput {
+  html: string
+  css: string
+  headings: Heading[]
+  bibliography: Bibliography
+}
+
+export const process = async (input: ProcessInput): Promise<ProcessOutput> => {
+  const file = new VFile(input.source)
+  console.log(file.value)
+
+  const bibliography = generateBibliography(input.bibliography)
+  file.data.bibliography = bibliography
+
+  const result = await processor.process(file as any)
   const html = String(result.value)
 
   return {
     html: String(html),
     css: (result.data.css as string) ?? '',
-    headings: result.data.headings as any,
+    headings: result.data.headings as Heading[],
+    bibliography,
   }
 }

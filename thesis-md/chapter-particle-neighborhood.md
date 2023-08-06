@@ -176,7 +176,7 @@ $$
 This leads to a significant improvement in image quality as can be seen in Figure [fig-anisotropy].
 
 <Figure ref="fig-anisotropy" sources="figure-anisotropy-1.png,figure-anisotropy-2.png">
-    <i>Left</i>: A visualization frame with isotropic kernels. Particles appear spherical and homogenous. <i>Right</i>: The same scene with anisotropic kernels. The deformation is dependent on the neighborhood of each particle, creating a more interesting picture.
+    *Left*: A visualization frame with isotropic kernels. Particles appear spherical and homogenous. *Right*: The same scene with anisotropic kernels. The deformation is dependent on the neighborhood of each particle, creating a more interesting picture.
 </Figure>
 
 ## Implementation

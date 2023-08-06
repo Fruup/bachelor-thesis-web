@@ -14,6 +14,9 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "@citation-js/core": "^0.6.8",
+    "@citation-js/plugin-bibtex": "^0.6.8",
+    "@citation-js/plugin-csl": "^0.6.8",
     "@sveltejs/adapter-auto": "^2.1.0",
     "@sveltejs/adapter-static": "^2.0.2",
     "@sveltejs/kit": "^1.22.3",

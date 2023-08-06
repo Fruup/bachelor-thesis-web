@@ -21,8 +21,10 @@ export const load = async () => {
     import('$thesis-md/links.md?raw'),
   ]
 
-  const source = (await Promise.all(fileImports)).map((module) => module.default).join('\n\n')
-  const { html, css, headings } = await process(source)
+  const bib = await import('$thesis-md/bib-refs.bib?raw').then((module) => module.default)
 
-  return { html, css, headings }
+  const source = (await Promise.all(fileImports)).map((module) => module.default).join('\n\n')
+  const { html, css, headings, bibliography } = await process({ source, bibliography: bib })
+
+  return { html, css, headings, bibliography }
 }

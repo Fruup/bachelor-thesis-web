@@ -1,15 +1,12 @@
 import { compile } from 'svelte/compiler'
 import { SKIP, visit } from 'unist-util-visit'
-import { unified, type Plugin } from 'unified'
+import type { Plugin } from 'unified'
 import * as fs from 'node:fs'
-// import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { Root as MdastRoot } from 'mdast'
 import type { RootContentMap, Root as HastRoot } from 'hast'
-import type { Processor } from 'unified'
 import type { SvelteSSRComponent } from './helper'
-import type { Raw } from 'mdast-util-to-hast'
+import 'mdast-util-to-hast' // `Raw` node
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -42,25 +39,6 @@ const replaceStuff = (s: string): string => {
   return s
 }
 
-import remarkParse from 'remark-parse'
-import remarkMath from 'remark-math'
-import remarkRehype from 'remark-rehype'
-
-/**
- * Used to transform nested `text` nodes.
- * Enables math to exist inside raw HTML nodes.
- * Resolves to an `hast` root node.
- */
-const nestedTextProcessor = unified()
-  .use(remarkParse)
-  .use(remarkMath)
-  .use(remarkRehype) as Processor<MdastRoot, HastRoot, HastRoot>
-
-const processNestedText = (source: string): HastRoot => {
-  const ast = nestedTextProcessor.parse(source)
-  return nestedTextProcessor.runSync(ast)
-}
-
 /**
  * Finds `raw` nodes in an `mdast` and...
  * - scans their content for component instances (starting with `<[A-Z]`),
@@ -73,26 +51,22 @@ export const rehypeSvelte: Plugin<[], HastRoot> = function () {
     // Collect nodes to transform
     const nodes: RootContentMap['raw'][] = []
 
-    visit(
-      tree,
-      (node): node is Raw => node.type === 'raw',
-      (node) => {
-        const components = parseComponents(node.value)
+    visit(tree, 'raw', (node) => {
+      const components = parseComponents(node.value)
 
-        // Skip if there are no components to be rendered.
-        if (!components.length) return
+      // Skip if there are no components to be rendered.
+      if (!components.length) return
 
-        // Add components information to the node
-        node.data = {
-          ...node.data,
-          components,
-        }
+      // Add components information to the node
+      node.data = {
+        ...node.data,
+        components,
+      }
 
-        nodes.push(node)
+      nodes.push(node)
 
-        return SKIP
-      },
-    )
+      return SKIP
+    })
 
     // Transform nodes asynchronously
     const promises = nodes.map((node) => async () => {
@@ -156,13 +130,10 @@ export const rehypeSvelte: Plugin<[], HastRoot> = function () {
       const rendered = Component.render()
 
       // Delete temporary file
-      // await fs.rm(TMP_PATH)
       fs.rmSync(TMP_PATH)
 
       // Replace HTML
-      node.value = rendered.html
-
-      node.value = replaceStuff(node.value)
+      node.value = replaceStuff(rendered.html)
 
       // Accumulate generated CSS
       file.data.css = (file.data.css ?? '') + rendered.css.code
@@ -170,54 +141,8 @@ export const rehypeSvelte: Plugin<[], HastRoot> = function () {
 
     for (const promise of promises) {
       await promise()
-      // await new Promise((resolve) => setTimeout(resolve, 1000))
     }
 
     // await Promise.all(promises)
-  }
-}
-
-/**
- * Finds `text` nodes in an `hast` and...
- * - parses their content as markdown,
- * - transforms the `mdast` to an `hast`
- * - and replaces the `text` node with the generated `hast` tree.
- */
-export const rehypeMath: Plugin<[], HastRoot> = function () {
-  return (tree, file) => {
-    visit(tree, (node, index, parent) => {
-      if (node.type !== 'text' || !parent || typeof index !== 'number') return
-
-      // console.log(node);
-      // return SKIP
-
-      // As only `text` nodes are processed,
-      // the resulting tree is always a `Root` with exactly one `paragraph` child.
-      const processed = processNestedText(node.value.trim())
-
-      // Skip empty nodes
-      if (processed.children.length === 0) return
-
-      const child = processed.children[0]
-
-      if (processed.children.length !== 1 || child.type !== 'element' || child.tagName !== 'p') {
-        throw Error('Unexpected processing result!')
-      }
-
-      // Replace this part of the tree
-      parent.children = parent.children
-        .slice(0, index)
-        .concat(child.children)
-        .concat(parent.children.slice(index + 1))
-
-      // parent.children[index] = {
-      //   type: 'element',
-      //   tagName: 'span',
-      //   children: child.children,
-      // }
-
-      // Skip children of this node
-      return SKIP
-    })
   }
 }

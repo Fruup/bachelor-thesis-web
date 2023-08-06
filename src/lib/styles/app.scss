@@ -2,14 +2,14 @@
 @import 'vars';
 
 :root {
-  --color-background: #fff;
-  --color-text: #1f1f1f;
+  --color-background: #{$color-background};
+  --color-text: #{$color-text};
 
   --color-background: #1f1f1f;
   --color-background-700: #090909;
   --color-text: #eee;
 
-  --color-primary: #c10926;
+  --color-primary: #{$color-primary};
 }
 
 :root {

@@ -7,7 +7,8 @@
   // - PARAGRAPHS -
   // --------------
 
-  p {
+  p,
+  figcaption {
     text-align: justify;
   }
 
@@ -32,6 +33,8 @@
   h1 {
     font-size: 2.5em;
     border-width: 3px;
+
+    margin-top: 5rem;
   }
 
   h2 {

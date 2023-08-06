@@ -16,7 +16,9 @@
   }
 
   export let data
-  const { html, css, headings } = data
+  const { html, css, headings, bibliography } = data
+
+  console.log(bibliography)
 
   onMount(() => {
     const mathContainers = container.querySelectorAll<HTMLDivElement>('.math.math-display')
