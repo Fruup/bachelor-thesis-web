@@ -1,7 +1,9 @@
 @import 'heading-counter';
+@import 'vars';
 
 @mixin document {
   hyphens: auto;
+  overflow-wrap: break-word;
 
   // --------------
   // - PARAGRAPHS -
@@ -16,17 +18,12 @@
   // - HEADINGS -
   // ------------
 
-  h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    position: relative;
-
-    // margin-top: 3em;
     margin-bottom: 1.5em;
-
     border-bottom: 1.5px solid var(--color-primary);
   }
 
@@ -53,6 +50,16 @@
 
   // Heading counters
   @include heading-counters;
+
+  @include sm {
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      text-align: center;
+    }
+  }
 
   // ------------
   // - SECTIONS -

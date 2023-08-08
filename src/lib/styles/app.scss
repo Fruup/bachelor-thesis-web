@@ -19,6 +19,10 @@
   line-height: 1.666;
 
   background-color: var(--color-background);
+
+  @include sm {
+    font-size: 16px;
+  }
 }
 
 :root,

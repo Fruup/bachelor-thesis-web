@@ -1,4 +1,4 @@
-# Acknowledgements
+# Acknowledge&shy;ments
 
 First and foremost, I want to thank Prof. Dr. Elmar Schömer and Dr. Rainer Erbes for being my supervisors during the writing of this thesis. They are always able to move their students in the right direction and are ready to help where help is needed.
 

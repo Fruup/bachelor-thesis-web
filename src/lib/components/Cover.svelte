@@ -1,4 +1,12 @@
 <script lang="ts">
+  import AngleDown from './icons/AngleDown.svelte'
+
+  const scrollToContent = () => {
+    window.scrollTo({
+      top: window.visualViewport?.height,
+      behavior: 'smooth',
+    })
+  }
 </script>
 
 <div class="cover">
@@ -8,14 +16,23 @@
     particle-based fluids
   </h1>
   <h6>Leon Scherer</h6>
+
+  <button class="to-content" on:click={scrollToContent}>
+    <AngleDown />
+  </button>
 </div>
 
 <style lang="scss">
+  @use 'sass:color';
+  @import 'vars';
+
   .cover {
     height: 100vh;
     display: grid;
     place-content: center;
     text-align: center;
+
+    position: relative;
 
     box-sizing: border-box;
     border-bottom: 10px solid var(--color-primary);
@@ -46,6 +63,42 @@
     h6 {
       font-weight: 300;
       font-size: 1.5rem;
+    }
+
+    @include sm {
+      h1 {
+        font-size: 1.7rem;
+      }
+
+      h6 {
+        font-size: 1rem;
+      }
+    }
+
+    button.to-content {
+      display: grid;
+      place-content: center;
+
+      color: $color-text;
+      cursor: pointer;
+
+      background-color: color.change($color-text, $alpha: 0.1);
+      border: none;
+      padding: 0;
+      border-radius: 999px;
+
+      transition: background-color 150ms ease;
+
+      &:hover {
+        background-color: color.change($color-text, $alpha: 0.2);
+      }
+
+      width: 3rem;
+      height: 3rem;
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      translate: -50%;
     }
   }
 </style>
