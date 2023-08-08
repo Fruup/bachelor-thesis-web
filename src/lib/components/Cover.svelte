@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ExternalLinks from './ExternalLinks.svelte'
   import AngleDown from './icons/AngleDown.svelte'
 
   const scrollToContent = () => {
@@ -16,6 +17,8 @@
     particle-based fluids
   </h1>
   <h6>Leon Scherer</h6>
+
+  <ExternalLinks class="external-links" />
 
   <button class="to-content" on:click={scrollToContent}>
     <AngleDown />
@@ -36,6 +39,12 @@
 
     box-sizing: border-box;
     border-bottom: 10px solid var(--color-primary);
+
+    :global(.external-links) {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+    }
 
     h1 {
       font-size: 3rem;
