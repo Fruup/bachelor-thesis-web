@@ -52,11 +52,11 @@
 
 {#if open}
   <div
-    transition:fly|local={{ duration }}
+    transition:fly={{ duration }}
     on:pointerdown|stopPropagation|self|capture={handlePointerDown}
     class="background"
   >
-    <div transition:fly|local={{ y: 20, delay: duration, duration }} class="container">
+    <div transition:fly={{ y: 20, delay: duration, duration }} class="container">
       {#if closable}
         <button class="close" on:click={() => (open = false)}>X</button>
       {/if}

@@ -40,7 +40,12 @@ const handleRestore = (e: CustomEvent<number>) => {
 }
 
 export const usePreview: Action = (node) => {
-  const anchors = node.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')
+  /**
+   * Determine anchors for preview.
+   * - Skip citation links.
+   * - Only use internal links.
+   */
+  const anchors = node.querySelectorAll<HTMLAnchorElement>('a[href^="#"]:not([data-is-citation])')
 
   const listeners = Array.from(anchors.values()).map((a) => {
     const listener = () => {

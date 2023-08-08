@@ -1,4 +1,4 @@
-@mixin heading-counter($depth) {
+@mixin heading-counter($depth, $minDepth: 1) {
   h#{$depth} {
     // Counter resets
     $resets: ();
@@ -9,7 +9,7 @@
 
     // Counter content
     $content: ();
-    @for $i from 1 through $depth {
+    @for $i from $minDepth through $depth {
       $h: h#{$i};
       $content: join($content, #{counter($h)} '.');
     }
@@ -26,7 +26,7 @@
 }
 
 @mixin heading-counters {
-  @for $i from 1 through 6 {
-    @include heading-counter($i);
+  @for $i from 2 through 6 {
+    @include heading-counter($i, $minDepth: 2);
   }
 }

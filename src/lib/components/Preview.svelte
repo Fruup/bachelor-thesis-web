@@ -42,6 +42,19 @@
   }
 
   $: style = `--x: ${x}px; top: ${y}px;`
+
+  $: html = (() => {
+    const N = 3
+    let html = ''
+    let e: Element | undefined | null = element
+
+    for (let i = 0; e && i < N; i++) {
+      html += e.outerHTML
+      e = e.nextElementSibling
+    }
+
+    return html
+  })()
 </script>
 
 {#if show && element}
@@ -53,7 +66,7 @@
     bind:clientHeight={contentHeight}
   >
     <div class="content">
-      {@html element.outerHTML + (element.nextElementSibling?.outerHTML ?? '')}
+      {@html html}
     </div>
 
     <div class="gradient" />

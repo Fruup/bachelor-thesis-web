@@ -15,6 +15,11 @@
 
   const BUTTON_CLASS_NAME = 'image-detail-button'
 
+  const flyParams = {
+    duration: durationOut,
+    y: 50,
+  }
+
   onMount(() => {
     const parent = element.parentElement
     if (!parent) return
@@ -47,11 +52,16 @@
     }
   }
 
-  const flyParams = {
-    duration: durationOut,
-    y: 50,
+  const handleWindowKeydown = (e: KeyboardEvent) => {
+    if (!visible) return
+
+    if (e.key === 'Escape') {
+      visible = false
+    }
   }
 </script>
+
+<svelte:window on:keydown={handleWindowKeydown} />
 
 {#if visible}
   <button

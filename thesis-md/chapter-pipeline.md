@@ -8,13 +8,13 @@
 
 In this chapter, we show a high-level overview of the pipeline that all data flows through to eventually create an image on the screen. We aim to provide context for the following chapters that go more deeply into explaining the authors' work.
 
-The proposed algorithm works through multiple passes, each one taking the output of the previous one as input. The input to the entire pipeline is an array of three-dimensional particle positions that represent the fluid at one particular moment in time. In Figure [fig-pipeline-overview], we illustrate which part of the pipeline accesses which data structures.
+The proposed algorithm works through multiple passes, each one taking the output of the previous one as input. The input to the entire pipeline is an array of three-dimensional particle positions that represent the fluid at one particular moment in time. In [this figure](#fig-pipeline-overview), we illustrate which part of the pipeline accesses which data structures.
 
 ### Pre-processing
 
 During this pass, the particle data is pre-processed and acceleration structures are built that serve the purpose of speeding up the following passes. An important note is that Wu et al. incorporate this pass into their algorithm tightly. It is executed in every frame of the visualization by processing it on the GPU. We on the other hand decided to run it only once when loading the dataset as it is the most time-consuming part of our implementation. We provide more information on how to improve on this in the chapter [**Future work**](#future-work).
 
-Firstly, the so-called _binary density grid_ (also called _density mask_ in the paper) is generated (Wu et al. [##\cite{Wu:2022}], section 4.1). Space is divided into a grid of cells. Each cell holds a boolean value indicating whether it is at all possible for the algorithm to find the fluid's surface inside the cell. For that, the maximum density of the fluid is approximated. If it does not exceed a certain threshold, the cell can safely be skipped to save valuable computation time.
+Firstly, the so-called _binary density grid_ (also called _density mask_ in the paper) is generated ([Wu et al.](cite:Wu), section 4.1). Space is divided into a grid of cells. Each cell holds a boolean value indicating whether it is at all possible for the algorithm to find the fluid's surface inside the cell. For that, the maximum density of the fluid is approximated. If it does not exceed a certain threshold, the cell can safely be skipped to save valuable computation time.
 
 Secondly, each particle is classified as either belonging to a dense ("_aggregated_") or to a sparse part of the fluid (splashes). This information is used in the depth pass when deciding which depth buffer the particle should be rendered to (more in the chapter [**Handling splash particles**](#handling-splash-particles)).
 
@@ -22,7 +22,7 @@ Secondly, each particle is classified as either belonging to a dense ("_aggregat
 
 In the depth pass, particles are rendered to a depth buffer as spheres with the radius $h$. The positions on those spheres serve as good approximations of the true fluid surface. They are used as starting points for refinement during the ray marching pass.
 
-Two depth buffers are filled during this pass. The authors call these $D$ and $D_{agg}$, we call them the primary and secondary depth buffer respectively. All particles are rendered to the primary buffer, but only the ones classified as "aggregated" are rendered to the secondary buffer. More information on this is provided in the sections [Depth pass](#depth-pass) and [#handling-splash-particles].
+Two depth buffers are filled during this pass. The authors call these $D$ and $D_{agg}$, we call them the primary and secondary depth buffer respectively. All particles are rendered to the primary buffer, but only the ones classified as "aggregated" are rendered to the secondary buffer. More information on this is provided in the sections [Depth pass](#depth-pass) and [**Handling splash particles**](#handling-splash-particles).
 
 ### Ray marching pass overview
 
@@ -30,7 +30,7 @@ Rays are shot from the camera into the scene along which the fluid surface is se
 
 ### Composition pass overview
 
-The last step of the pipeline is to take the data computed in all previous passes and determine a color for each pixel of the screen. Here, the fluid's properties like color, refraction, transparency, and light interaction are modelled and it is embedded into the scene (more in the chapter [**Image composition**](#image-composition).
+The last step of the pipeline is to take the data computed in all previous passes and determine a color for each pixel of the screen. Here, the fluid's properties like color, refraction, transparency, and light interaction are modelled and it is embedded into the scene (more in the chapter [**Image composition**](#image-composition)).
 
 # Depth pass
 
@@ -42,12 +42,12 @@ The last step of the pipeline is to take the data computed in all previous passe
     A quad of two triangles representing one particle. The texture coordinates are set up for computing a spherical offset in the z-direction.
 </Figure>
 
-After pre-processing has taken place, the particles are rendered into depth buffers that serve as entry points for the surface reconstruction (see Figure [#fig-depth-buffer] for a visualization of a depth buffer).
+After pre-processing has taken place, the particles are rendered into depth buffers that serve as entry points for the surface reconstruction (see [figure](#fig-depth-buffer) for a visualization of a depth buffer).
 
 The first step is to construct a vertex buffer that holds all particles comprising the fluid. Wu et al. suggest to render a camera-facing quad for each particle with sidelength $2h$. Each vertex holds
 
 - a three-dimensional position in world space,
-- and a two-dimensional texture coordinate - $(-1, -1)$ for the top left, $(1, 1)$ for the bottom right vertex (Figure [#fig-depth-uvs]).
+- and a two-dimensional texture coordinate - $(-1, -1)$ for the top left, $(1, 1)$ for the bottom right vertex ([figure](#fig-depth-uvs)).
 
 The vertex buffer is fed into the first render pass, which writes to the depth buffers. The value output to the buffer is:
 
@@ -138,7 +138,7 @@ $$
 \textbf{r}' := \textbf{r} + \Delta t \textbf{v}.
 $$
 
-The step size should be set as a fraction of the particle radius $h$ so no particles are skipped. The first time we encounter a position where $\rho(\textbf{r}) \geq \sigma$ - we cannot check for exact equality when moving in discrete steps - the surface's position is assumed there. The position can then be stored in a buffer holding a three-dimensional position for every pixel of the screen. When we find the surface's position, we also want to compute the normal for lighting calculations during image composition. For this, the authors propose to sum up the gradients of the kernel function (see equation 11 of Wu et al. [##\cite{Wu:2022}]):
+The step size should be set as a fraction of the particle radius $h$ so no particles are skipped. The first time we encounter a position where $\rho(\textbf{r}) \geq \sigma$ - we cannot check for exact equality when moving in discrete steps - the surface's position is assumed there. The position can then be stored in a buffer holding a three-dimensional position for every pixel of the screen. When we find the surface's position, we also want to compute the normal for lighting calculations during image composition. For this, the authors propose to sum up the gradients of the kernel function (see equation 11 of [Wu et al.](cite:Wu)):
 
 $$
 \textbf{n}_{object}(\textbf{r}) = || \space \sum_i \nabla W(\textbf{r}_i - \textbf{r}) \space ||
@@ -163,7 +163,7 @@ In this last step of the pipeline, the computed per-pixel fluid properties are u
 For each pixel, we compute
 
 - a diffuse color,
-- a specular color using Phong's lighting model (Phong [##\cite{Phong:1975}]),
+- a specular color using Phong's lighting model ([Phong](cite:Phong)),
 - an environment color from reflection or refraction
 
 and combine these to form the resulting pixel color.

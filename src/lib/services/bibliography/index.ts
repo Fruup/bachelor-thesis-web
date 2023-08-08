@@ -30,11 +30,26 @@ export interface Bibliography {
 export const generateBibliography = (bibtex: string): Bibliography => {
   const cite = new Cite(bibtex)
 
+  let html: string = cite.format('bibliography', {
+    format: 'html',
+    template: 'apa',
+  })
+
+  /**
+   * Add an ID to each element. It can then be used as a link target.
+   *
+   * data-csl-entry-id="Hello"
+   * ->
+   * data-csl-entry-id="Hello" id="Hello"
+   */
+  const regex = /data-csl-entry-id="[^\"]*"/g
+  html = html.replaceAll(
+    regex,
+    (substring) => substring + substring.slice('data-csl-entry-'.length),
+  )
+
   return {
     refs: cite.data as CitationReference[],
-    html: cite.format('bibliography', {
-      format: 'html',
-      template: 'apa',
-    }),
+    html,
   }
 }

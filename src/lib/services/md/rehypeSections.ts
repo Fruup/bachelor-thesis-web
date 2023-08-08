@@ -1,6 +1,6 @@
 import type { Plugin } from 'unified'
-import type { ElementContent, Root as Root, Element, Node, Nodes, Parent } from 'hast'
-import { SKIP, visit } from 'unist-util-visit'
+import type { ElementContent, Root, Element, Nodes, Parent } from 'hast'
+import { visit } from 'unist-util-visit'
 
 interface Options {
   sectionTag?: 'section' | 'article'

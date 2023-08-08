@@ -17,8 +17,6 @@ export const load = async () => {
     import('$thesis-md/chapter-results.md?raw'),
     import('$thesis-md/chapter-future-work.md?raw'),
     import('$thesis-md/chapter-conclusion.md?raw'),
-
-    import('$thesis-md/links.md?raw'),
   ]
 
   const bib = await import('$thesis-md/bib-refs.bib?raw').then((module) => module.default)

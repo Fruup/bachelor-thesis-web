@@ -18,9 +18,7 @@
   export let data
   const { html, css, headings, bibliography } = data
 
-  console.log(bibliography)
-
-  onMount(() => {
+  const hydrateMath = () => {
     const mathContainers = container.querySelectorAll<HTMLDivElement>('.math.math-display')
 
     for (const mathContainer of mathContainers) {
@@ -33,8 +31,18 @@
         },
       })
     }
+  }
 
+  const hydrateImages = () => {
     imageElements = Array.from(container.querySelectorAll('img'))
+  }
+
+  onMount(() => {
+    /**
+     * Hydrate server rendered markup here.
+     */
+    hydrateMath()
+    hydrateImages()
   })
 </script>
 
@@ -48,6 +56,11 @@
   {@html `<${'style'} scoped>${css}</style>`}
 
   {@html html}
+
+  <section class="bibliography">
+    <h2>Bibliography</h2>
+    {@html bibliography.html}
+  </section>
 </div>
 
 <!--
@@ -84,6 +97,16 @@
 
     :global {
       @include document;
+    }
+  }
+
+  .bibliography {
+    :global {
+      .csl-entry {
+        margin: 1.5rem 0;
+        padding-left: 3rem;
+        text-indent: -3rem;
+      }
     }
   }
 </style>

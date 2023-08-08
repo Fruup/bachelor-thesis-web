@@ -1,8 +1,8 @@
 # Introduction
 
-The primary source of this thesis is the paper _A Real-Time Adaptive Ray Marching Method for Particle-Based Fluid Surface Reconstruction_, written by Tong Wu, Zhiqiang Zhou, Anlan Wang, Yuning Gong and Yanci Zhang. In addition to reformulating its contents, we introduce details about our implementation to further build an understanding of the authors' work and to supply anchor points for anyone attempting to develop an implementation for their own.
+The primary source of this thesis is the paper [_A Real-Time Adaptive Ray Marching Method for Particle-Based Fluid Surface Reconstruction_](cite:Wu), written by Tong Wu, Zhiqiang Zhou, Anlan Wang, Yuning Gong and Yanci Zhang. In addition to reformulating its contents, we introduce details about our implementation to further build an understanding of the authors' work and to supply anchor points for anyone attempting to develop an implementation for their own.
 
-Williams #\cite{Williams:2008} states that computational fluid dynamics consists of three phases: simulation, extraction of a renderable representation, and rendering itself. This work focuses on the latter two. The authors of our primary source build on top of existing advancements in the field and propose algorithms and data structures that aim to make those methods capable of running in real-time.
+[Williams](cite:Williams) states that computational fluid dynamics consists of three phases: simulation, extraction of a renderable representation, and rendering itself. This work focuses on the latter two. The authors of our primary source build on top of existing advancements in the field and propose algorithms and data structures that aim to make those methods capable of running in real-time.
 
 Whenever we write "the authors" or "Wu et al." we are referring to ideas coming from our primary source. We distinguish between our and others' thoughts by mentioning their origin. Unfortunately, we did not have the time to implement every aspect of the authors' algorithm. Details on the parts we implemented can be found in the **Implementation** subsections of each chapter.
 
@@ -12,18 +12,18 @@ We will start by establishing some notation and explain the reasoning behind our
 
 ## Technology
 
-We decided to use C++ together with _Vulkan_ as our graphics API. _Vulkan_ is a state-of-the-art graphics API allowing for very low-level access to GPU processes and resources. Although this is not strictly necessary for the application discussed here, learning about _Vulkan_ is as interesting as it is useful for moving deeper into graphics programming, which is why we chose to use it. _Vulkan_ opens the door to vast improvements in computation time by letting the user decide which computations should run in parallel, what memory is accessible where, and much more. By leveraging more of _Vulkan_'s features, the computation time needed by our implementation could reduce by orders of magnitude. These possibilities are discussed further in the chapter **Future work [future-work]**.
+We decided to use C++ together with _Vulkan_ as our graphics API. _Vulkan_ is a state-of-the-art graphics API allowing for very low-level access to GPU processes and resources. Although this is not strictly necessary for the application discussed here, learning about _Vulkan_ is as interesting as it is useful for moving deeper into graphics programming, which is why we chose to use it. _Vulkan_ opens the door to vast improvements in computation time by letting the user decide which computations should run in parallel, what memory is accessible where, and much more. By leveraging more of _Vulkan_'s features, the computation time needed by our implementation could reduce by orders of magnitude. These possibilities are discussed further in the chapter [**Future work**](#future-work).
 
 Other libraries that were used are listed here, some of which are described in more detail later:
 
-- _Dear ImGui_ for the graphical user interface [ImGui](##\cite{ImGui})
+- [_Dear ImGui_](cite:ImGui) for the graphical user interface
 - _GLFW_ for window management
-- _Partio_ for importing particle data [Partio](##\cite{Partio})
-- _Eigen_ and _glm_ for math [Eigen](##\cite{Eigen})
-- _CompactNSearch_ for neighborhood search [CompactNSearch](##\cite{CompactNSearch})
-- _SPlisHSPlasH_ for dataset generation [SplishSplash](##\cite{SplishSplash})
+- [_Partio_](cite:Partio) for importing particle data
+- [_Eigen_](cite:Eigen) and _glm_ for math
+- [_CompactNSearch_](cite:CompactNSearch) for neighborhood search
+- [_SPlisHSPlasH_](cite:SplishSplash) for dataset generation
 
-The code for our implementation can be found on [GitLab](https://gitlab.rlp.net/leschere/bachelor-thesis).
+The code for our implementation can be found on [GitHub](https://github.com/Fruup/bachelor-thesis).
 
 ## Terminology
 

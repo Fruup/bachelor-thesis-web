@@ -11,11 +11,15 @@ import rehypeHighlight from 'rehype-highlight'
 import rehypeStringify from 'rehype-stringify'
 import { rehypeSvelte } from './rehypeSvelte'
 // import { rehypeSections } from './rehypeSections'
-import type { Root as MdastRoot } from 'mdast'
+import type { Link, Root as MdastRoot } from 'mdast'
 import { VFile } from 'vfile'
 import { visit } from 'unist-util-visit'
 import { toString } from 'mdast-util-to-string'
 import { generateBibliography, type Bibliography } from '../bibliography'
+import { remarkShiftHeadings } from './remarkShiftHeadings'
+import { toHast } from 'mdast-util-to-hast'
+import type { ElementContent, Nodes } from 'hast'
+import { rehypeCitationLinks } from './rehypeCitationLinks'
 
 declare module 'vfile' {
   interface DataMap {
@@ -37,6 +41,7 @@ const remarkToc = () => {
 const processor = unified()
   .use(remarkParse)
   .use(remarkToc)
+  .use(remarkShiftHeadings)
   .use(remarkDirective)
   .use(remarkMath)
   .use(remarkRehype, {
@@ -44,6 +49,7 @@ const processor = unified()
   })
   .use(rehypeSvelte)
   .use(rehypeRaw)
+  .use(rehypeCitationLinks)
   .use(rehypeSlug)
   // .use(rehypeSections)
   .use(rehypeAutolink)
@@ -70,7 +76,6 @@ interface ProcessOutput {
 
 export const process = async (input: ProcessInput): Promise<ProcessOutput> => {
   const file = new VFile(input.source)
-  console.log(file.value)
 
   const bibliography = generateBibliography(input.bibliography)
   file.data.bibliography = bibliography

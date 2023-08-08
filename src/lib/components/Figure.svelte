@@ -36,7 +36,7 @@
   </div>
 
   <figcaption>
-    <i>Figure 42.1:</i>
+    <i>Figure:</i>
 
     <slot />
   </figcaption>

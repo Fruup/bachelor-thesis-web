@@ -6,12 +6,12 @@ This chapter aims to equip the reader with the mathematical and conceptual basic
 
 The macroscopic real world we are seeing and experiencing every day is of continuous nature. Computers on the other hand are unable to capture this continuity reasonably. Thus, computer scientists have to invent ways of discretizing physical problems to be able to construct simulations for them. Smoothed Particle Hydrodynamics (SPH) is one such method of discretization. Originally invented for the simulation of gravitational systems in astronomy, it is now widely used in fluid simulation.
 
-There are two prominent mathematical theories describing the computational simulation of hydrodynamics [Monaghan:2005]:  
+There are two prominent mathematical theories describing the computational simulation of hydrodynamics ([Monaghan](cite:Monaghan)):
 In _Eulerian_ hydrodynamics, the fluid's properties are observed at fixed locations in space, usually arranged in a grid. This technique has built the foundation of computational fluid dynamics as we know it today.  
 In _Lagrangian_ hydrodynamics, the fluid's properties are carried through space by individual particles. These quantities are evaluated at the particles' freely moving positions instead of at fixed grid points.
 Both methods are still in simultaneous use today as they differ in computational efficiency and physical accuracy. The choice of a best fit depends heavily on the application.
 
-SPH belongs to the _Lagrangian_ category. The core idea is to approximate a continuous function $f$ with a finite set of particles $p_i$. Each particle consists of a position $\textbf{r}_i \in \mathbb{R}^3$ and an associated feature $f_i \in F$. Together, these form the set of particles $P := \{ p_i: i = 0,...,n-1 \}$ with $p_i := (\textbf{r}_i, f_i)$. Here, $F$ is a generic set of feature values that is dependent on the context of the problem. In the application discussed in this work, the feature of interest is the fluid's density. This can be represented by a scalar in $\mathbb{R}$, which is why we set $F := \mathbb{R}$. In other applications for example, it is common to see $F := \mathbb{R}^3$ and $f_i \in F$ to be interpreted as the particle's velocity (see Ummenhofer et al. [Ummenhofer:2020]).
+SPH belongs to the _Lagrangian_ category. The core idea is to approximate a continuous function $f$ with a finite set of particles $p_i$. Each particle consists of a position $\textbf{r}_i \in \mathbb{R}^3$ and an associated feature $f_i \in F$. Together, these form the set of particles $P := \{ p_i: i = 0,...,n-1 \}$ with $p_i := (\textbf{r}_i, f_i)$. Here, $F$ is a generic set of feature values that is dependent on the context of the problem. In the application discussed in this work, the feature of interest is the fluid's density. This can be represented by a scalar in $\mathbb{R}$, which is why we set $F := \mathbb{R}$. In other applications for example, it is common to see $F := \mathbb{R}^3$ and $f_i \in F$ to be interpreted as the particle's velocity (see [Ummenhofer et al.](cite:Ummenhofer)).
 
 The continuous distribution of a feature in three-dimensional space is given by a function
 
@@ -41,7 +41,7 @@ $$
 \mathcal{S} := \{ \textbf{r} \in \mathbb{R}^3 : \rho(\textbf{r}) = \sigma \}
 $$
 
-This definition is implied in algorithm 1 of Wu et al. #\cite{Wu:2022} and is the basis for the surface extraction algorithm described later (see the chapter [**Surface extraction with ray marching**](#surface-extraction-with-ray-marching)).
+This definition is implied in algorithm 1 of [Wu et al.](cite:Wu) and is the basis for the surface extraction algorithm described later (see the chapter [**Surface extraction with ray marching**](#surface-extraction-with-ray-marching)).
 
 ### Smoothing kernels
 
@@ -51,15 +51,15 @@ This definition is implied in algorithm 1 of Wu et al. #\cite{Wu:2022} and is th
   (top) and aggregated particles (bottom) can be seen and is important in later chapters.
 </Figure>
 
-The kernel can be interpreted as a function that "smears" or smoothes the particles' features across space to create a continuum (see Figure [blibla](#fig-sph)). It must have some properties to function properly:
+The kernel can be interpreted as a function that "smears" or smoothes the particles' features across space to create a continuum (see [figure](#fig-sph)). It must have some properties to function properly:
 
-- Its volume integral over the entire domain is normalized (see [Monaghan:2005]). This ensures that the kernel does not amplify the feature the particle is carrying:
+- Its volume integral over the entire domain is normalized (see [Monaghan](cite:Monaghan)). This ensures that the kernel does not amplify the feature the particle is carrying:
 
   $$
   \int_{\mathbb{R}^3} W(\textbf{r}) \space d \textbf{r}' = 1
   $$
 
-- It approaches the Dirac delta distribution for small support $h$ (explained below) (see [Monaghan:2005]):
+- It approaches the Dirac delta distribution for small support $h$ (explained below, see [Monaghan](cite:Monaghan)):
   $$
   \lim\limits_{h \rightarrow 0} W(\textbf{r}) = \delta(\textbf{r})
   $$
@@ -72,7 +72,7 @@ $$
 
 However, this property is not always desired for this application for reasons explained in a later chapter.
 
-The choice of a kernel function is important for error considerations and practicality. The authors did not state the specific function they used - only that it was a "symmetric decaying spline with finite support". In the following, the kernel definition by Koschier et al. [Koschier et al.](#\cite{Koschier:2019}) will be used (see Figure [#fig-kernel]):
+The choice of a kernel function is important for error considerations and practicality. The authors did not state the specific function they used - only that it was a "symmetric decaying spline with finite support". In the following, the kernel definition by [Koschier et al.](cite:Koschier) will be used (see [figure](#fig-kernel)):
 
 Let $r := \frac{|\textbf{r}|}{h}$:
 
@@ -148,7 +148,7 @@ Memory alignment is a complicated topic and we did not have the time to measure 
 
 Thanks to the simple particle representation, datasets can be generated in a variety of ways. The generator merely has to output particle positions for selected steps of the simulation. This strongly decouples the visualization from the underlying simulation. In fact, the data does not have to be computed using an SPH approach at all.
 
-The library we used to generate datasets is the _SPlisHSPlasH_ framework developed by Jan Bender [SplishSplash](#\cite{SplishSplash}) which exports into the BGEO file format - a compressed binary format for storing geometry data used by a program called _Houdini_. These files can then be imported into our program with the help of the _Partio_ library developed at the Walt Disney Animation Studios [Partio](#\cite{Partio}). It handles the decompression and reading of particle data for us.
+The library we used to generate datasets is the [_SPlisHSPlasH_](cite:SplishSplash) framework developed by Jan Bender which exports into the BGEO file format - a compressed binary format for storing geometry data used by a program called _Houdini_. These files can then be imported into our program with the help of the [_Partio_](cite:Partio) library developed at the Walt Disney Animation Studios. It handles the decompression and reading of particle data for us.
 
 When generating datasets, a range of parameters can be set to alter the physical interactions between particles like viscosity and particle mass. Some aspects of the simulation also affect the visualization, which is why each dataset needs some parameters in addition to the particle positions:
 
@@ -167,4 +167,4 @@ When generating datasets, a range of parameters can be set to alter the physical
   particles' velocity from low (blue) to high (green).
 </Figure>
 
-As our main dataset for tests we used a typical dam break scenario, characterized by a block of fluid that drops into a confined box (Figure [fig-dataset]). This frequently used dataset qualifies perfectly for our application as it features flat surfaces at the start (the block of fluid) and intricate edges and splashes as the block collides with the box, flinging into the air on the other side. We ran the simulation for about $10$ seconds, producing $123$ frames with $6859$ particles each.
+As our main dataset for tests we used a typical dam break scenario, characterized by a block of fluid that drops into a confined box ([figure](#fig-dataset)). This frequently used dataset qualifies perfectly for our application as it features flat surfaces at the start (the block of fluid) and intricate edges and splashes as the block collides with the box, flinging into the air on the other side. We ran the simulation for about $10$ seconds, producing $123$ frames with $6859$ particles each.

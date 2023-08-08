@@ -2,7 +2,7 @@
 
 ## From isotropic to anisotropic
 
-We explained the smoothing kernels used in [**Smoothed Particle Hydrodynamics**](#smoothed-particle-hydrodynamics) above and called them isotropic - which can be thought of as "spherical" or radially homogenous. This property is necessary for simulation but leads to the most prominent visual artifacts of visualizing particle-based surfaces: Flat surfaces no longer look flat but rather bumpy. It can be evidently seen that the underlying representation is made up of points or spheres. The authors compared their method to multiple others, illustrating the need for a way of hiding spherical artifacts (see Figure 8 of Wu et al. [#\cite{Wu:2022}]). To combat this, researchers have begun to develop anisotropic techniques for the extraction of surfaces from point clouds as soon as 2001 (Dinh et al. [#\cite{Dinh:2001}]).
+We explained the smoothing kernels used in [**Smoothed Particle Hydrodynamics**](#smoothed-particle-hydrodynamics) above and called them isotropic - which can be thought of as "spherical" or radially homogenous. This property is necessary for simulation but leads to the most prominent visual artifacts of visualizing particle-based surfaces: Flat surfaces no longer look flat but rather bumpy. It can be evidently seen that the underlying representation is made up of points or spheres. The authors compared their method to multiple others, illustrating the need for a way of hiding spherical artifacts (see figure 8 of [Wu et al.](cite:Wu)). To combat this, researchers have begun to develop anisotropic techniques for the extraction of surfaces from point clouds as soon as 2001 ([Dinh et al.](cite:Dinh)).
 
 Interestingly, the main idea has not changed over the last 20 years seeing that Wu et al. use a very similar technique as described in that 2001 paper:
 For a given point in space, the configuration of the neighboring points is characterized with a principal component analysis to retrieve the main axes along which the particles are distributed. This information is used to stretch the surface in a way that better fits the particles' distribution. This has the effect of preserving sharp features like edges and corners as well as flat, homogenous areas.
@@ -27,7 +27,7 @@ $$
 
 ## Neighborhood search
 
-The authors did not mention the algorithm they used to find neighboring particles. The de facto standard spatial acceleration structure for SPH-related algorithms is the hash grid. For this reason, we opted to incorporate this approach as well, leaning on the explanation by Koschier et al. [#\cite{Koschier:2019}]. A hash grid divides space into equally sized cells. A cell index can then be computed for an arbitrary point $\textbf{r}$ by dividing by the cell size $c$ and rounding each entry down to the closest integer:
+The authors did not mention the algorithm they used to find neighboring particles. The de facto standard spatial acceleration structure for SPH-related algorithms is the hash grid. For this reason, we opted to incorporate this approach as well, leaning on the explanation by [Koschier et al.](cite:Koschier). A hash grid divides space into equally sized cells. A cell index can then be computed for an arbitrary point $\textbf{r}$ by dividing by the cell size $c$ and rounding each entry down to the closest integer:
 
 $$
 \begin{pmatrix} i \\ j \\ k \end{pmatrix} :=
@@ -41,7 +41,7 @@ $$
 
 The cell index can then be hashed using any function $hash: \mathbb{Z}^3 \rightarrow \mathbb{Z}$ to retrieve an index into a table storing some data associated with the cell. In this case, we store a list of indices of particles lying in the cell.
 
-We use a library called _CompactNSearch_ developed by Dan Koschier [#\cite{CompactNSearch}] which is also used by the _SPlisHSPlasH_ framework [#\cite{SplishSplash}] we use for dataset generation. It uses the technique described above to accelerate neighborhood search in a point cloud for a given neighborhood radius which is equal to the cell size $c := R_N$. The hashing function is efficient, consisting only of simple prime number multiplications (using prime numbers $p_0,p_1,p_2$) and XOR operations ($\otimes$):
+We use a library called [_CompactNSearch_](cite:CompactNSearch) developed by Dan Koschier which is also used by the [_SPlisHSPlasH_](cite:SplishSplash) framework we use for dataset generation. It uses the technique described above to accelerate neighborhood search in a point cloud for a given neighborhood radius which is equal to the cell size $c := R_N$. The hashing function is efficient, consisting only of simple prime number multiplications (using prime numbers $p_0,p_1,p_2$) and XOR operations ($\otimes$):
 
 $$
 hash(i,j,k) :=
@@ -77,19 +77,19 @@ The second search grid is used for characterizing the neighborhood of each parti
 
 A naive loop over all $n$ particles means the evaluation of $\rho$ has a lower bound of $\mathcal{O}(n)$. Because accessing the hash table is a constant-time operation, spatial hashing reduces the time complexity to approximately $\mathcal{O}(\overline{|N|})$ where $\overline{|N|}$ is the expected number of neighbors.
 
-It is also important to consider how cells are ordered in memory. Modern hardware implements extensive caching capabilities that are essential for performant software. Programmers are advised to keep memory locations that are accessed together close to each other. Since for every neighborhood search, 27 cells have to be looked up, it is beneficial to store these 27 cells as close to each other as possible. Koschier therefore sorts the grid in a z-curve arrangement, allowing for spatial coherence when arranging a three-dimensional grid in a one-dimensional array (see Figure [#fig-z-curve] for a two-dimensional illustration).
+It is also important to consider how cells are ordered in memory. Modern hardware implements extensive caching capabilities that are essential for performant software. Programmers are advised to keep memory locations that are accessed together close to each other. Since for every neighborhood search, 27 cells have to be looked up, it is beneficial to store these 27 cells as close to each other as possible. Koschier therefore sorts the grid in a z-curve arrangement, allowing for spatial coherence when arranging a three-dimensional grid in a one-dimensional array (see [this figure](#fig-z-curve) for a two-dimensional illustration).
 
 <Figure ref="fig-z-curve" sources="figure-z-curve.png">
-    A z-curve ordering of two-dimensional grids of varying sizes. The image comes from the public Wikimedia Commons repository [#\cite ZCurve].
+    A z-curve ordering of two-dimensional grids of varying sizes. The image comes from the public Wikimedia Commons repository.
 </Figure>
 
 ## Weighted Principal Component Analysis
 
-Principal component analysis is a common method of reducing the dimensionality of datasets to enable visualization in two or three dimensions (Koren et al. [#\cite{Koren:2003}]). This is achieved by finding orthogonal axes that best fit the data and project it onto a subset of those axes. Since we are not dealing with high-dimensional data, we are not interested in reducing its complexity. Rather, we want to find the axes that most closely match the configuration of points in a small neighborhood. To do this, one has to compute the eigenvectors of the correlation matrix derived from the point set.
+Principal component analysis is a common method of reducing the dimensionality of datasets to enable visualization in two or three dimensions ([Koren et al.](cite:Koren)). This is achieved by finding orthogonal axes that best fit the data and project it onto a subset of those axes. Since we are not dealing with high-dimensional data, we are not interested in reducing its complexity. Rather, we want to find the axes that most closely match the configuration of points in a small neighborhood. To do this, one has to compute the eigenvectors of the correlation matrix derived from the point set.
 
-In this section, we explain the algorithm Wu et al. use to compute the principal components. It depends on the work of Yu and Turk [#\cite{Yu:2013}] where an alteration of standard PCA is employed called Weighted Principal Component Analysis (WPCA). The key difference is that each point $\textbf{r}_j$ is assigned a weight $w_{j} \in \mathbb{R}$ that is used when computing the dataset's correlation matrix $\textbf{C}$ and mean $\overline{\textbf{r}}$.
+In this section, we explain the algorithm Wu et al. use to compute the principal components. It depends on the work of [Yu and Turk](cite:Yu) where an alteration of standard PCA is employed called Weighted Principal Component Analysis (WPCA). The key difference is that each point $\textbf{r}_j$ is assigned a weight $w_{j} \in \mathbb{R}$ that is used when computing the dataset's correlation matrix $\textbf{C}$ and mean $\overline{\textbf{r}}$.
 
-We define the correlation matrix as not limited to evaluation at the particles' positions. This differs from our sources (Yu and Turk [#\cite{Yu:2013}]) in that we can characterize the neighborhood around any point in space. The reason for this is explained below in **Implementation [#particle-neighborhood.implementation]**.
+We define the correlation matrix as not limited to evaluation at the particles' positions. This differs from our sources ([Yu and Turk](cite:Yu)) in that we can characterize the neighborhood around any point in space. The reason for this is explained below in **Implementation [#particle-neighborhood.implementation]**.
 
 $$
 \textbf{C}(\textbf{r}) :=
@@ -103,7 +103,7 @@ $$
 \sum_j w_j \textbf{r}_j
 $$
 
-For weights, some isotropic smoothing kernel $W$ is used. We use the one described in **Smoothed Particle Hydrodynamics [#smoothed-particle-hydrodynamics]**:
+For weights, some isotropic smoothing kernel $W$ is used. We use the one described in [**Smoothed Particle Hydrodynamics**](#smoothed-particle-hydrodynamics):
 
 $$
 w_j := W(\textbf{r}_j - \textbf{r})
@@ -111,7 +111,7 @@ $$
 
 Applying weights to the particles' positions can be interpreted as an analogy to the SPH method. It also reduces visual artifacts because there is no strict boundary between lying inside and outside the neighborhood of a point.
 
-After computing $\textbf{C}$, an eigendecomposition is performed on this matrix. The matrix is decomposed into a rotation $\textbf{R}$ and a scaling $\bm{\Sigma}$ containing $\textbf{C}$'s eigenvalues on its diagonal (see equation 12 in Yu and Turk [#\cite{Yu:2013}]):
+After computing $\textbf{C}$, an eigendecomposition is performed on this matrix. The matrix is decomposed into a rotation $\textbf{R}$ and a scaling $\bm{\Sigma}$ containing $\textbf{C}$'s eigenvalues on its diagonal (see equation 12 in [Yu and Turk](cite:Yu)):
 
 $$
 \textbf{C} = \textbf{R} \bm{\Sigma} \textbf{R}^T
@@ -121,7 +121,7 @@ $$
 
 Some neighborhood configurations might yield a correlation matrix whose determinant is close or equal to zero. This can happen when all points lie on the same plane. In this case, the eigendecomposition returns a small eigenvalue leading to exploding numbers when computing $\bm{\Sigma}^{-1}$. To address this problem, Yu and Turk introduce a minimum for each eigenvalue as a fraction of the largest one. This way, the deformation can be controlled and parameterized to fit different use-cases.
 
-Assuming $\sigma_1 \geq \sigma_2 \geq \sigma_3$, a new $\tilde{\bm{\Sigma}}$ is constructed with the altered eigenvalues, limiting the ratio of two eigenvalues to a constant $k_r$ (see equation 15 in Yu and Turk [#\cite{Yu:2013}]):
+Assuming $\sigma_1 \geq \sigma_2 \geq \sigma_3$, a new $\tilde{\bm{\Sigma}}$ is constructed with the altered eigenvalues, limiting the ratio of two eigenvalues to a constant $k_r$ (see equation 15 in [Yu and Turk](cite:Yu)):
 
 $$
 \tilde{\sigma}_k := \max \{ \sigma_k, \frac{\sigma_1}{k_r} \}
@@ -152,10 +152,10 @@ In the following, the altered covariance matrix $\tilde{\textbf{C}}$ will be use
 ## Particle classification
 
 <Figure ref="fig-particle-neighborhood-anisotropic" sources="figure-anisotropic.png">
-    This is figure 4 of the paper by Wu et al. It shows how anisotropic kernels help with correctly classifying particles located close to the surface of the fluid.
+    This is figure 4 of the paper by [Wu et al](cite:Wu). It shows how anisotropic kernels help with correctly classifying particles located close to the surface of the fluid.
 </Figure>
 
-In order to reduce the number of ray marching steps near small bundles of particles, they have to be classified as either belonging to a dense fluid area ("aggregated") or to a sparse area (non-aggregated, splash particles). For this, the density is evaluated at each particle's position and compared to a constant. When using isotropic kernels for the density calculation, this will lead to misinterpretations at the surface of the fluid, even in aggregated locations (Figure [#fig-particle-neighborhood-anisotropic]). Therefore, the authors suggest to characterize the particle's neighborhood as explained above and construct a transformation matrix $\textbf{G}_i$ for the particle to be used as an input to the anisotropic kernel $W_a$. $\textbf{G}_i$ is a transformation into the coordinate system represented by $\tilde{\textbf{C}}$, so it has to be the inverse of $\tilde{\textbf{C}}$ (note that $\textbf{R}$ is a rotation matrix, therefore $\textbf{R}^{-1} \equiv \textbf{R}^T$):
+In order to reduce the number of ray marching steps near small bundles of particles, they have to be classified as either belonging to a dense fluid area ("aggregated") or to a sparse area (non-aggregated, splash particles). For this, the density is evaluated at each particle's position and compared to a constant. When using isotropic kernels for the density calculation, this will lead to misinterpretations at the surface of the fluid, even in aggregated locations ([figure](#fig-particle-neighborhood-anisotropic)). Therefore, the authors suggest to characterize the particle's neighborhood as explained above and construct a transformation matrix $\textbf{G}_i$ for the particle to be used as an input to the anisotropic kernel $W_a$. $\textbf{G}_i$ is a transformation into the coordinate system represented by $\tilde{\textbf{C}}$, so it has to be the inverse of $\tilde{\textbf{C}}$ (note that $\textbf{R}$ is a rotation matrix, therefore $\textbf{R}^{-1} \equiv \textbf{R}^T$):
 
 $$
 \textbf{G}_i :=
@@ -173,7 +173,7 @@ $$
 \rho(\textbf{r}) = m \sum_{i \in N(\textbf{r}, h)} W_a(\textbf{r}_i - \textbf{r}, \textbf{G}_i)
 $$
 
-This leads to a significant improvement in image quality as can be seen in Figure [fig-anisotropy].
+This leads to a significant improvement in image quality as can be seen in [this figure](#fig-anisotropy).
 
 <Figure ref="fig-anisotropy" sources="figure-anisotropy-1.png,figure-anisotropy-2.png">
     *Left*: A visualization frame with isotropic kernels. Particles appear spherical and homogenous. *Right*: The same scene with anisotropic kernels. The deformation is dependent on the neighborhood of each particle, creating a more interesting picture.
