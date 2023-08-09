@@ -2,7 +2,9 @@ const buildDir = 'build'
 const distDir = 'dist'
 const distBranch = 'dist'
 
-await $`git worktree remove ${distDir} --force`
+try {
+  await $`git worktree remove ${distDir} --force`
+} catch {}
 
 await $`git worktree add ${distDir} ${distBranch} --no-checkout`
 
