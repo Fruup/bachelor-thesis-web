@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { browser } from '$app/environment'
   import { onMount } from 'svelte'
   import { cubicOut } from 'svelte/easing'
   import { fly, fade, type TransitionConfig } from 'svelte/transition'
@@ -66,7 +65,7 @@
 {#if visible}
   <button
     class="image-detail-mask"
-    in:fade={{ duration: durationIn }}
+    in:fade={{ duration: 100 }}
     out:fade={{ duration: durationOut }}
     on:click={() => (visible = false)}
   >

@@ -104,7 +104,7 @@ export const rehypeSvelte: Plugin<[], HastRoot> = function () {
 			`
 
       const compiled = compile(svelteSource, {
-        // dev: true,
+        dev: import.meta.env.DEV,
         generate: 'ssr',
         enableSourcemap: false,
         hydratable: true,

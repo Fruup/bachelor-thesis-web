@@ -89,7 +89,7 @@ Principal component analysis is a common method of reducing the dimensionality o
 
 In this section, we explain the algorithm Wu et al. use to compute the principal components. It depends on the work of [Yu and Turk](cite:Yu) where an alteration of standard PCA is employed called Weighted Principal Component Analysis (WPCA). The key difference is that each point $\textbf{r}_j$ is assigned a weight $w_{j} \in \mathbb{R}$ that is used when computing the dataset's correlation matrix $\textbf{C}$ and mean $\overline{\textbf{r}}$.
 
-We define the correlation matrix as not limited to evaluation at the particles' positions. This differs from our sources ([Yu and Turk](cite:Yu)) in that we can characterize the neighborhood around any point in space. The reason for this is explained below in **Implementation [#particle-neighborhood.implementation]**.
+We define the correlation matrix as not limited to evaluation at the particles' positions. This differs from our sources ([Yu and Turk](cite:Yu)) in that we can characterize the neighborhood around any point in space. The reason for this is explained below in **Implementation**.
 
 $$
 \textbf{C}(\textbf{r}) :=
@@ -176,7 +176,7 @@ $$
 This leads to a significant improvement in image quality as can be seen in [this figure](#fig-anisotropy).
 
 <Figure ref="fig-anisotropy" sources="figure-anisotropy-1.png,figure-anisotropy-2.png">
-    *Left*: A visualization frame with isotropic kernels. Particles appear spherical and homogenous. *Right*: The same scene with anisotropic kernels. The deformation is dependent on the neighborhood of each particle, creating a more interesting picture.
+    _Left_: A visualization frame with isotropic kernels. Particles appear spherical and homogenous. _Right_: The same scene with anisotropic kernels. The deformation is dependent on the neighborhood of each particle, creating a more interesting picture.
 </Figure>
 
 ## Implementation

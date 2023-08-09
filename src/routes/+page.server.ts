@@ -1,9 +1,5 @@
 import { process } from '$lib/services/md'
 
-export const ssr = true
-export const csr = true
-export const prerender = true
-
 export const load = async () => {
   const fileImports = [
     import('$thesis-md/abstract.md?raw'),
