@@ -1,4 +1,4 @@
-import { rehypeSections } from '$lib/plugins/rehypeSections'
+import { rehypeSections } from '$lib/services/md/rehypeSections'
 import { test } from 'vitest'
 import rehypeRaw from 'rehype-raw'
 import remarkParse from 'remark-parse'

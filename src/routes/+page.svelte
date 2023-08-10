@@ -5,17 +5,12 @@
   import { useNavigationHistory } from '$lib/services/history'
   import { usePreview } from '$lib/services/preview'
   import { onMount } from 'svelte'
-  import Navigation from './Navigation.svelte'
 
   export let data
   const { html, css, headings, bibliography } = data
 
   let container: HTMLDivElement
   let imageElements: HTMLImageElement[] = []
-
-  const restore = (index: number) => {
-    container.dispatchEvent(new CustomEvent('history:restore', { detail: index }))
-  }
 
   const hydrateMath = () => {
     const mathContainers = container.querySelectorAll<HTMLDivElement>('.math.math-display')
@@ -66,8 +61,6 @@
 	Put this element below all content so hash links won't lead to previewed elements.
 -->
 <Preview />
-
-<Navigation {restore} />
 
 <style lang="scss">
   @import 'vars';
