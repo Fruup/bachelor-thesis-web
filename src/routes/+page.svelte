@@ -2,21 +2,20 @@
   import ImageDetail from '$lib/components/ImageDetail.svelte'
   import MathOptions from '$lib/components/MathOptions.svelte'
   import Preview from '$lib/components/Preview.svelte'
-  import { navigationHistory, useNavigationHistory } from '$lib/services/history'
+  import { useNavigationHistory } from '$lib/services/history'
   import { usePreview } from '$lib/services/preview'
   import { onMount } from 'svelte'
+  import Navigation from './Navigation.svelte'
+
+  export let data
+  const { html, css, headings, bibliography } = data
 
   let container: HTMLDivElement
-  let imageDetailsContainer: HTMLDivElement
-
   let imageElements: HTMLImageElement[] = []
 
   const restore = (index: number) => {
     container.dispatchEvent(new CustomEvent('history:restore', { detail: index }))
   }
-
-  export let data
-  const { html, css, headings, bibliography } = data
 
   const hydrateMath = () => {
     const mathContainers = container.querySelectorAll<HTMLDivElement>('.math.math-display')
@@ -46,7 +45,7 @@
   })
 </script>
 
-<div bind:this={imageDetailsContainer} class="image-details">
+<div class="image-details">
   {#each imageElements as element}
     <ImageDetail {element} />
   {/each}
@@ -68,29 +67,11 @@
 -->
 <Preview />
 
-<nav>
-  <ul>
-    {#each $navigationHistory as item, index}
-      <li>
-        {item.scrollPosition}
-        <br />
-        {item.toHash}
-
-        <button on:click={() => restore(index)}> restore </button>
-      </li>
-    {/each}
-  </ul>
-</nav>
+<Navigation {restore} />
 
 <style lang="scss">
   @import 'vars';
   @import 'document';
-
-  nav {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-  }
 
   .container {
     margin: auto;

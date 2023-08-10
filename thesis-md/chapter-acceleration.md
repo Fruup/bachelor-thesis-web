@@ -35,7 +35,7 @@ $$
 
 where $N_c \geq |N(\textbf{r}_c, h)|$ is a constant approximation of the number of particles in and around the cell $c$. Note that $W$ has its global maximum at $\textbf{0} = (0, 0, 0)^T$.
 
-The idea for determining $N_c$ is similar to the neighborhood search described in the chapter [**Particle neighborhood and anisotropic kernels**](#sec-particleneighborhood): If the cell size equals the particles' radius, only the $3 \times 3 \times 3$ neighborhood of each cell has to be taken into account. Wu et al. use a three-dimensional convolution on an array $N$ containing the number of particles per cell to approximate $N_c$. They give a two-dimensional example illustrating their idea. Let cell $c$ be at location $(x, y)$, then $N_{(dx,dy)}$ is the number of particles inside the cell located at $(x + dx, y + dy)$:
+The idea for determining $N_c$ is similar to the neighborhood search described in the chapter [**Particle neighborhood and anisotropic kernels**](#particle-neighborhood-and-anisotropic-kernels): If the cell size equals the particles' radius, only the $3 \times 3 \times 3$ neighborhood of each cell has to be taken into account. Wu et al. use a three-dimensional convolution on an array $N$ containing the number of particles per cell to approximate $N_c$. They give a two-dimensional example illustrating their idea. Let cell $c$ be at location $(x, y)$, then $N_{(dx,dy)}$ is the number of particles inside the cell located at $(x + dx, y + dy)$:
 
 $$
 N_c :=
