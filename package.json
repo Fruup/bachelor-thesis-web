@@ -1,6 +1,6 @@
 {
   "name": "thesis",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "vite dev",
@@ -9,9 +9,10 @@
     "deploy": "zx scripts/deploy.mjs",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write .",
-    "test": "vitest"
+    "lint": "prettier --check . && eslint .",
+    "format": "prettier --write .",
+    "test": "vitest",
+    "html-validate": "html-validate build/index.html"
   },
   "devDependencies": {
     "@citation-js/core": "^0.6.8",
@@ -27,6 +28,8 @@
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-svelte": "^2.32.4",
+    "html-validate": "^8.2.0",
     "latest-version": "^7.0.0",
     "mdast-util-to-hast": "^13.0.0",
     "prettier": "^3.0.0",

@@ -49,9 +49,6 @@ const doStuff = (tree: Parent, sectionTag: string, forDepth: number) => {
   })
 }
 
-/**
- *
- */
 export const rehypeSections: Plugin<[options?: Options], Root> = function (options) {
   // Set default options.
   const { sectionTag = 'section' } = options ?? {}

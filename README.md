@@ -4,7 +4,7 @@ This is a web version of my bachelor thesis _"Implementation of a method of surf
 
 The code of my own implementation can be found in [this repository](https://github.com/Fruup/bachelor-thesis).
 
-------
+---
 
 I originally wrote the document in LaTeX, but being drawn to the simplicity of MarkDown, I attempted to create my own static site generator with some nice features:
 

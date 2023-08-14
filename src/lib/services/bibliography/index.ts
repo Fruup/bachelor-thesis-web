@@ -22,7 +22,7 @@ export const generateBibliography = (bibtex: string): Bibliography => {
    * ->
    * data-csl-entry-id="Hello" id="Hello"
    */
-  const regex = /data-csl-entry-id="[^\"]*"/g
+  const regex = /data-csl-entry-id="[^"]*"/g
   html = html.replaceAll(
     regex,
     (substring) => substring + ' ' + substring.slice('data-csl-entry-'.length),

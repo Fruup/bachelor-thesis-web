@@ -20,7 +20,12 @@
 
   <ExternalLinks class="external-links" />
 
-  <button class="to-content" on:click={scrollToContent}>
+  <button
+    type="button"
+    class="to-content"
+    on:click={scrollToContent}
+    aria-label="skip to main content"
+  >
     <AngleDown />
   </button>
 </div>

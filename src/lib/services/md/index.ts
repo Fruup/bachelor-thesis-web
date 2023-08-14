@@ -78,6 +78,7 @@ export const process = async (input: ProcessInput): Promise<ProcessOutput> => {
   const bibliography = generateBibliography(input.bibliography)
   file.data.bibliography = bibliography
 
+  /** @ts-ignore `process` uses a different `VFile` */
   const result = await processor.process(file as any)
   const html = String(result.value)
 

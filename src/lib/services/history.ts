@@ -6,7 +6,7 @@ interface HistoryEntry {
   toHash: string
 }
 
-const isHistoryEvent = (e: any): e is HistoryEntry =>
+const isHistoryEvent = (e: Record<string, any>): e is HistoryEntry =>
   typeof e.scrollPosition === 'number' && typeof e.toHash === 'string'
 
 export const navigationHistory = writable<HistoryEntry[]>([])

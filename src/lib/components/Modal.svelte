@@ -48,7 +48,7 @@
 
 <svelte:window on:hashchange={handleHashChange} />
 
-<button on:click={() => (open = true)}>modal</button>
+<button type="button" on:click={() => (open = true)}>modal</button>
 
 {#if open}
   <div
@@ -58,7 +58,7 @@
   >
     <div transition:fly={{ y: 20, delay: duration, duration }} class="container">
       {#if closable}
-        <button class="close" on:click={() => (open = false)}>X</button>
+        <button type="button" class="close" on:click={() => (open = false)}>X</button>
       {/if}
 
       <div class="content">

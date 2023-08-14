@@ -12,7 +12,11 @@
     </li>
     <li class="separator" />
     <li>
-      <a href="https://github.com/Fruup/bachelor-thesis-web" target="_blank">
+      <a
+        href="https://github.com/Fruup/bachelor-thesis-web"
+        target="_blank"
+        aria-label="link to github repository"
+      >
         <GitHubIcon />
       </a>
     </li>

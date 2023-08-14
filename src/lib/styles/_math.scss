@@ -1,0 +1,10 @@
+.math {
+  &.fit {
+    overflow-x: hidden;
+  }
+
+  > * {
+    transition: scale 500ms ease;
+    transform-origin: center left;
+  }
+}

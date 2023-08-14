@@ -23,16 +23,3 @@
     fit()
   })
 </script>
-
-<style lang="scss" global>
-  .math {
-    &.fit {
-      overflow-x: hidden;
-    }
-
-    > * {
-      transition: scale 500ms ease;
-      transform-origin: center left;
-    }
-  }
-</style>

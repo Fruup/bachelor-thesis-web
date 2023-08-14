@@ -64,6 +64,7 @@
 
 {#if visible}
   <button
+    type="button"
     class="image-detail-mask"
     in:fade={{ duration: 100 }}
     out:fade={{ duration: durationOut }}
